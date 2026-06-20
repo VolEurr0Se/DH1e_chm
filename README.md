@@ -6,6 +6,6 @@
 [下载不全书](https://github.com/VolEurr0Se/DH1e_chm/releases)
 
 ### DH1e角色卡
-[下载半自动卡](https://github.com/VolEurr0Se/DH1e_chm/tree/main/DH%E8%A7%92%E8%89%B2%E5%8D%A1/%E5%8D%8A%E8%87%AA%E5%8A%A8)
+[下载半自动卡](https://github.com/VolEurr0Se/DH1e_chm/tree/main/DH%E8%A7%92%E8%89%B2%E5%8D%A1/%E5%8D%8A%E8%87%AA%E5%8A%A8)：适合需求轻量、多自定义的用户
 
-下载全自动卡
+下载全自动卡：适合需求便捷、自动填充的用户
