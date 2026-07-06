@@ -9,3 +9,6 @@
 [下载半自动卡](https://github.com/VolEurr0Se/DH1e_chm/tree/main/DH%E8%A7%92%E8%89%B2%E5%8D%A1/%E5%8D%8A%E8%87%AA%E5%8A%A8)：适合需求轻量、多自定义的用户
 
 [下载全自动卡](https://github.com/VolEurr0Se/DH1e_chm/tree/main/DH%E8%A7%92%E8%89%B2%E5%8D%A1/%E5%85%A8%E8%87%AA%E5%8A%A8)：适合需求便捷、自动填充的用户
+
+### 车卡战斗入门指南
+[下载指南](https://github.com/VolEurr0Se/DH1e_chm/blob/main/DH%E8%BD%A6%E5%8D%A1%E6%88%98%E6%96%97%E5%8F%82%E8%80%83%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97/DH%E8%BD%A6%E5%8D%A1%E6%88%98%E6%96%97%E5%8F%82%E8%80%83%E5%85%A5%E9%97%A8%E6%8C%87%E5%8D%97.pdf)
