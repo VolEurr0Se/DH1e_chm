@@ -1,0 +1,379 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<title>黑暗异端 1E 不全书</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style type="text/css"> 
+<!-- 
+.selected {font-weight: normal;background-color: #E2E2E2;padding:0px,2px,0px,2px;}
+.unselected { font-weight: normal;padding:0px,2px,0px,2px;}
+.hand { cursor: hand; }
+.p {height: 16px;width: 16px;vertical-align: middle;border: 0;}
+div,body { font-family: Tahoma, Verdana; font-size: 11px; }
+A:link {text-decoration: none; color:#000000}
+A:visited {text-decoration: none; color: #000000}
+A:active {text-decoration: none; color: #000000 }
+A:hover {text-decoration: none; color: #FF0000 }
+
+-->
+</style>
+
+<SCRIPT LANGUAGE="JavaScript">
+<!--
+var cl,pn,pm,bl;
+var path = 'icons/';
+var pos = 0;
+var icon;
+var tar = 'content';
+var display;
+var imgi;
+var AutoCollapse;
+var LastSelected = -1;
+var loaded = false;
+var max;
+var divlist;
+
+function SetEnv(v,a){
+
+if(v==0){ 
+	pn = [['daplus.gif','daminus.gif'],['tplus.gif','tminus.gif'],['uaplus.gif','uaminus.gif'],['splus.gif','sminus.gif']];
+	PreloadImg('downangle.gif','tshaped.gif','upangle.gif','sline.gif','daplus.gif','daminus.gif','tplus.gif','tminus.gif','uaplus.gif','uaminus.gif','splus.gif','sminus.gif','blank.gif','line.gif');
+}else{
+	pn = [['plus.gif','minus.gif']];
+	PreloadImg('plus.gif','minus.gif','blank.gif');
+
+}
+AutoCollapse = a;
+}
+
+ function PreloadImg(){
+if (document.images) { 
+	var imgs = PreloadImg.arguments; 
+	var pload = new Array();
+	for (var i=0; i<imgs.length; i++) { 
+		pload[i] = new Image; 
+		pload[i].src = path + imgs[i]; 
+	} 
+} 
+ } 
+
+function get(o){
+var x;
+if(document.all) x=document.all[o]; 
+if(document.getElementById) x=document.getElementById(o);
+
+return x;
+}
+
+
+function pnImg(img){
+var i,j;
+for(i=0;i<=3;i++){
+	for(j=0;j<=1;j++){
+	if(img.substr(img.lastIndexOf('/') + 1)== pn[i][j]){
+		return i;
+	}
+	}
+}
+}
+function icon(img){
+var f;
+f = img.substr(img.lastIndexOf('/') + 1);
+if( f=='1.gif' || f=='2.gif'){
+	return ['1.gif','2.gif'];
+}
+if( f=='3.gif' || f=='4.gif'){
+	return ['3.gif','4.gif'];
+}
+if( f=='5.gif' || f=='6.gif'){
+	return ['5.gif','6.gif'];
+}
+if( f=='7.gif' || f=='8.gif'){
+	return ['7.gif','8.gif'];
+}
+return [f,f];
+}
+
+function show(id){
+get('d' + id).style.display='block';
+if(get('imgn' + id )) get('imgn' + id ).src= path + pn[pnImg(get('imgn' + id ).src)][1];
+get('img' + id ).src= path + icon(get('img' + id ).src)[1];
+
+}
+
+function collapse(id){
+get('d' + id ).style.display='none';
+if(get('imgn' + id )) get('imgn' + id ).src= path + pn[pnImg(get('imgn' + id ).src)][0];
+get('img' + id ).src= path + icon(get('img' + id ).src)[0];
+
+}
+
+function collapseAll(){
+var i;
+var o;
+for(i=0;i<=divlist.length-1;i++){
+	if(o=get('d' + divlist[i])){
+		if(o.style.display!='none'){ 
+			collapse(divlist[i]);
+		}
+	}
+}
+}
+
+function showAll(){
+var i;
+var o;
+for(i=0;i<=divlist.length-1;i++){
+	if(o=get('d' + divlist[i])){
+		if(o.style.display!='block'){ 
+			show(divlist[i]);
+		}
+	}
+}
+}
+
+function unselectAll(){
+var i=0;
+while(get("l" + i)){
+	get("l" + i).className = "unselected";
+	i++;
+}
+}
+
+function clickNode(index){
+var e;
+
+e = get("l" + index);
+if(e==null) return;
+e = e.parentNode;
+if(e.nodeName == 'A'){
+	if(e.href!= window.location.href + '#'){
+		parent.parent.content.location.href = e.href;
+	}else{
+		selectNode(index);
+	}
+	e.onclick;
+}
+}
+
+function showParent(ele){
+var e;
+e = ele.parentNode;
+
+if(e==null) return;
+
+if(e.nodeName == 'DIV'){
+	if(e.id!='') show(e.id.substring(1,e.id.length ));
+}else if(e.nodeName == 'A'){
+
+}
+showParent(e);
+}
+
+function showNode(index){
+showParent(get("l" + index));
+LinkClick(index);
+}
+
+function selectNode(index){
+if(LastSelected!=index){
+//collapseAll();
+showParent(get("l" + index));
+LinkClick(index);
+get('l' + index).scrollIntoView(true);
+
+
+//alert(get('l' + index).offsetHeight + '|' + document.body.clientHeight + '|' + document.body.offsetHeight);
+window.scrollTo(0,document.body.scrollTop); // - document.body.clientHeight /3);
+}
+}
+
+
+function NodeClick(id){
+if(get('d' + id ).style.display=='none'){
+	show(id);
+}else{
+	collapse(id);
+}
+return false;
+}
+
+function LinkDblClick(id){
+if(!AutoCollapse){
+	if(get('d' + id ).style.display=='none'){
+		show(id);
+	}else{
+		collapse(id);
+	}
+}
+return false;
+}
+
+function LinkClick(index,hasChild,r){
+if(AutoCollapse && hasChild){
+	if(get('d' + index ).style.display=='none'){
+		collapseAll()
+		showParent(get('l' + index));
+		show(index);
+	}else{
+		collapseAll()
+		showParent(get('l' + index));	
+		collapse(index);
+	}
+}
+if(LastSelected!=-1){
+	get('l' + LastSelected).className = "unselected";
+}
+get('l' + index).className = "selected";
+LastSelected = index;
+return r;
+}
+
+function body_onmousemove(event){
+if(typeof(document.body.scrollTop)!='undefined'){
+if(parseInt(event.clientX)<5){
+window.scroll(0,document.body.scrollTop);}}
+if(typeof(window.scrollY)!='undefined'){
+if(parseInt(event.clientX)<5){
+window.scrollTo(0,window.scrollY);}}
+}
+
+window.defaultStatus = '';
+
+function body_onload(){
+get('loading').style.display='none';
+loaded = true;
+if(parent.parent.content.document.readyState){
+	if(parent.parent.content.document.readyState == 'complete'){
+		try{parent.parent.content.syn();}catch(e){};
+	}
+}else{
+	if(parent.parent.contentLoaded){
+		try{parent.parent.content.syn();}catch(e){};
+	}
+}
+}
+
+//-->
+</SCRIPT>
+<script language="JavaScript" src="languages.js"></script>
+
+</head>
+
+<body bgcolor="#ffffff" leftmargin="5" topmargin="5" marginwidth="5" marginheight="5" onmousemove="body_onmousemove(event);" onload="body_onload();">
+<div id="loading"><font color="#FF0000" size="1"> Loading table of contents... 
+</font><br><br></div>
+<script>SetEnv(0,false)</script><div><nobr><img src="icons/downangle.gif" class="p"><a href="topics/前言.htm" onclick="return LinkClick('0',false,true)" target="content" title="前言" onmousemove="window.status='前言'"><img src="icons/11.gif" class="p"> <span id="l0" class="unselected">前言</span></a></nobr></div>
+<div><nobr><a href="#" onClick="return NodeClick('1')"><img id="imgn1" src="icons/tplus.gif" class="p"></a><a href="topics/角色创建/角色创建.htm" onclick="return LinkClick('1',true,true)" onDblClick="return LinkDblClick('1')" target="content" title="角色创建速查" onmousemove="window.status='角色创建速查'"><img id="img1" src="icons/1.gif" class="p"> <span id="l1" class="unselected">角色创建速查</span></a></nobr></div>
+<div id="d1" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('2')"><img id="imgn2" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/出身世界.htm" onclick="return LinkClick('2',true,true)" onDblClick="return LinkDblClick('2')" target="content" title="出身世界" onmousemove="window.status='出身世界'"><img id="img2" src="icons/1.gif" class="p"> <span id="l2" class="unselected">出身世界</span></a></nobr></div>
+<div id="d2" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/出身速查.htm" onclick="return LinkClick('3',false,true)" target="content" title="出身速查" onmousemove="window.status='出身速查'"><img src="icons/11.gif" class="p"> <span id="l3" class="unselected">出身速查</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('4')"><img id="imgn4" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/蛮荒世界.htm" onclick="return LinkClick('4',true,true)" onDblClick="return LinkDblClick('4')" target="content" title="蛮荒世界" onmousemove="window.status='蛮荒世界'"><img id="img4" src="icons/1.gif" class="p"> <span id="l4" class="unselected">蛮荒世界</span></a></nobr></div>
+<div id="d4" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/黄昏星（审判官手册）.htm" onclick="return LinkClick('5',false,true)" target="content" title="黄昏星（审判官手册）" onmousemove="window.status='黄昏星（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l5" class="unselected">黄昏星（审判官手册）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('6')"><img id="imgn6" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/巢都世界.htm" onclick="return LinkClick('6',true,true)" onDblClick="return LinkDblClick('6')" target="content" title="巢都世界" onmousemove="window.status='巢都世界'"><img id="img6" src="icons/1.gif" class="p"> <span id="l6" class="unselected">巢都世界</span></a></nobr></div>
+<div id="d6" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/巢都变种人（激进派手册）.htm" onclick="return LinkClick('7',false,true)" target="content" title="巢都变种人（激进派手册）" onmousemove="window.status='巢都变种人（激进派手册）'"><img src="icons/11.gif" class="p"> <span id="l7" class="unselected">巢都变种人（激进派手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/枪灰城（审判官手册）.htm" onclick="return LinkClick('8',false,true)" target="content" title="枪灰城（审判官手册）" onmousemove="window.status='枪灰城（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l8" class="unselected">枪灰城（审判官手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/沃格巢都（审判官手册）.htm" onclick="return LinkClick('9',false,true)" target="content" title="沃格巢都（审判官手册）" onmousemove="window.status='沃格巢都（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l9" class="unselected">沃格巢都（审判官手册）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('10')"><img id="imgn10" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/帝国世界.htm" onclick="return LinkClick('10',true,true)" onDblClick="return LinkDblClick('10')" target="content" title="帝国世界" onmousemove="window.status='帝国世界'"><img id="img10" src="icons/1.gif" class="p"> <span id="l10" class="unselected">帝国世界</span></a></nobr></div>
+<div id="d10" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/马卡贝斯五号（审判官手册）.htm" onclick="return LinkClick('11',false,true)" target="content" title="马卡贝斯五号（审判官手册）" onmousemove="window.status='马卡贝斯五号（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l11" class="unselected">马卡贝斯五号（审判官手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/锡诺菲亚（审判官手册）.htm" onclick="return LinkClick('12',false,true)" target="content" title="锡诺菲亚（审判官手册）" onmousemove="window.status='锡诺菲亚（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l12" class="unselected">锡诺菲亚（审判官手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/修院栽培（忠烈之血）.htm" onclick="return LinkClick('13',false,true)" target="content" title="修院栽培（忠烈之血）" onmousemove="window.status='修院栽培（忠烈之血）'"><img src="icons/11.gif" class="p"> <span id="l13" class="unselected">修院栽培（忠烈之血）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('14')"><img id="imgn14" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/虚空生人.htm" onclick="return LinkClick('14',true,true)" onDblClick="return LinkDblClick('14')" target="content" title="虚空生人" onmousemove="window.status='虚空生人'"><img id="img14" src="icons/1.gif" class="p"> <span id="l14" class="unselected">虚空生人</span></a></nobr></div>
+<div id="d14" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/卡利西斯舰队（审判官手册）.htm" onclick="return LinkClick('15',false,true)" target="content" title="卡利西斯舰队（审判官手册）" onmousemove="window.status='卡利西斯舰队（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l15" class="unselected">卡利西斯舰队（审判官手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/黑暗舰舱人（激进派手册）.htm" onclick="return LinkClick('16',false,true)" target="content" title="黑暗舰舱人（激进派手册）" onmousemove="window.status='黑暗舰舱人（激进派手册）'"><img src="icons/11.gif" class="p"> <span id="l16" class="unselected">黑暗舰舱人（激进派手册）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('17')"><img id="imgn17" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/铸造世界（审判官手册）.htm" onclick="return LinkClick('17',true,true)" onDblClick="return LinkDblClick('17')" target="content" title="铸造世界（审判官手册）" onmousemove="window.status='铸造世界（审判官手册）'"><img id="img17" src="icons/1.gif" class="p"> <span id="l17" class="unselected">铸造世界（审判官手册）</span></a></nobr></div>
+<div id="d17" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/遗失的数据板.htm" onclick="return LinkClick('18',false,true)" target="content" title="遗失的数据板" onmousemove="window.status='遗失的数据板'"><img src="icons/11.gif" class="p"> <span id="l18" class="unselected">遗失的数据板</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/思维洗涤（审判官手册）.htm" onclick="return LinkClick('19',false,true)" target="content" title="思维洗涤（审判官手册）" onmousemove="window.status='思维洗涤（审判官手册）'"><img src="icons/11.gif" class="p"> <span id="l19" class="unselected">思维洗涤（审判官手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('20')"><img id="imgn20" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/贵族生人（审判官手册）.htm" onclick="return LinkClick('20',true,true)" onDblClick="return LinkDblClick('20')" target="content" title="贵族生人（审判官手册）" onmousemove="window.status='贵族生人（审判官手册）'"><img id="img20" src="icons/1.gif" class="p"> <span id="l20" class="unselected">贵族生人（审判官手册）</span></a></nobr></div>
+<div id="d20" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/出身世界/马尔菲污血（激进派手册）.htm" onclick="return LinkClick('21',false,true)" target="content" title="马尔菲污血（激进派手册）" onmousemove="window.status='马尔菲污血（激进派手册）'"><img src="icons/11.gif" class="p"> <span id="l21" class="unselected">马尔菲污血（激进派手册）</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/役从门生（忠烈之血）.htm" onclick="return LinkClick('22',false,true)" target="content" title="役从门生（忠烈之血）" onmousemove="window.status='役从门生（忠烈之血）'"><img src="icons/11.gif" class="p"> <span id="l22" class="unselected">役从门生（忠烈之血）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('23')"><img id="imgn23" src="icons/tplus.gif" class="p"></a><a href="topics/出身世界/忠嗣学院（审判官手册）.htm" onclick="return LinkClick('23',true,true)" onDblClick="return LinkDblClick('23')" target="content" title="忠嗣学院（审判官手册）" onmousemove="window.status='忠嗣学院（审判官手册）'"><img id="img23" src="icons/1.gif" class="p"> <span id="l23" class="unselected">忠嗣学院（审判官手册）</span></a></nobr></div>
+<div id="d23" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/枯萎学院（激进派手册）.htm" onclick="return LinkClick('24',false,true)" target="content" title="枯萎学院（激进派手册）" onmousemove="window.status='枯萎学院（激进派手册）'"><img src="icons/11.gif" class="p"> <span id="l24" class="unselected">枯萎学院（激进派手册）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/出身世界/圣殿世界（忠烈之血）.htm" onclick="return LinkClick('25',false,true)" target="content" title="圣殿世界（忠烈之血）" onmousemove="window.status='圣殿世界（忠烈之血）'"><img src="icons/11.gif" class="p"> <span id="l25" class="unselected">圣殿世界（忠烈之血）</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('26')"><img id="imgn26" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/背景包.htm" onclick="return LinkClick('26',true,true)" onDblClick="return LinkDblClick('26')" target="content" title="背景包" onmousemove="window.status='背景包'"><img id="img26" src="icons/1.gif" class="p"> <span id="l26" class="unselected">背景包</span></a></nobr></div>
+<div id="d26" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('27')"><img id="imgn27" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/审判官手册.htm" onclick="return LinkClick('27',true,true)" onDblClick="return LinkDblClick('27')" target="content" title="审判官手册" onmousemove="window.status='审判官手册'"><img id="img27" src="icons/1.gif" class="p"> <span id="l27" class="unselected">审判官手册</span></a></nobr></div>
+<div id="d27" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('28')"><img id="imgn28" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/文员.htm" onclick="return LinkClick('28',true,true)" onDblClick="return LinkDblClick('28')" target="content" title="文员" onmousemove="window.status='文员'"><img id="img28" src="icons/1.gif" class="p"> <span id="l28" class="unselected">文员</span></a></nobr></div>
+<div id="d28" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/军务部军需官.htm" onclick="return LinkClick('29',false,true)" target="content" title="军务部军需官" onmousemove="window.status='军务部军需官'"><img src="icons/11.gif" class="p"> <span id="l29" class="unselected">军务部军需官</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/言究学社学者.htm" onclick="return LinkClick('30',false,true)" target="content" title="言究学社学者" onmousemove="window.status='言究学社学者'"><img src="icons/11.gif" class="p"> <span id="l30" class="unselected">言究学社学者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/虚空商贸员.htm" onclick="return LinkClick('31',false,true)" target="content" title="虚空商贸员" onmousemove="window.status='虚空商贸员'"><img src="icons/11.gif" class="p"> <span id="l31" class="unselected">虚空商贸员</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('32')"><img id="imgn32" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/法务官.htm" onclick="return LinkClick('32',true,true)" onDblClick="return LinkDblClick('32')" target="content" title="法务官" onmousemove="window.status='法务官'"><img id="img32" src="icons/1.gif" class="p"> <span id="l32" class="unselected">法务官</span></a></nobr></div>
+<div id="d32" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/卡利西斯型连环凶案.htm" onclick="return LinkClick('33',false,true)" target="content" title="卡利西斯型连环凶案" onmousemove="window.status='卡利西斯型连环凶案'"><img src="icons/11.gif" class="p"> <span id="l33" class="unselected">卡利西斯型连环凶案</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/大锡诺菲亚空心人.htm" onclick="return LinkClick('34',false,true)" target="content" title="大锡诺菲亚空心人" onmousemove="window.status='大锡诺菲亚空心人'"><img src="icons/11.gif" class="p"> <span id="l34" class="unselected">大锡诺菲亚空心人</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/卢格南的红窟.htm" onclick="return LinkClick('35',false,true)" target="content" title="卢格南的红窟" onmousemove="window.status='卢格南的红窟'"><img src="icons/11.gif" class="p"> <span id="l35" class="unselected">卢格南的红窟</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('36')"><img id="imgn36" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/杀手.htm" onclick="return LinkClick('36',true,true)" onDblClick="return LinkDblClick('36')" target="content" title="杀手" onmousemove="window.status='杀手'"><img id="img36" src="icons/1.gif" class="p"> <span id="l36" class="unselected">杀手</span></a></nobr></div>
+<div id="d36" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/星海锋刃.htm" onclick="return LinkClick('37',false,true)" target="content" title="星海锋刃" onmousemove="window.status='星海锋刃'"><img src="icons/11.gif" class="p"> <span id="l37" class="unselected">星海锋刃</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/谋杀歌者.htm" onclick="return LinkClick('38',false,true)" target="content" title="谋杀歌者" onmousemove="window.status='谋杀歌者'"><img src="icons/11.gif" class="p"> <span id="l38" class="unselected">谋杀歌者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/冥父之子.htm" onclick="return LinkClick('39',false,true)" target="content" title="冥父之子" onmousemove="window.status='冥父之子'"><img src="icons/11.gif" class="p"> <span id="l39" class="unselected">冥父之子</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('40')"><img id="imgn40" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/牧师.htm" onclick="return LinkClick('40',true,true)" onDblClick="return LinkDblClick('40')" target="content" title="牧师" onmousemove="window.status='牧师'"><img id="img40" src="icons/1.gif" class="p"> <span id="l40" class="unselected">牧师</span></a></nobr></div>
+<div id="d40" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/塔苏斯至圣经院.htm" onclick="return LinkClick('41',false,true)" target="content" title="塔苏斯至圣经院" onmousemove="window.status='塔苏斯至圣经院'"><img src="icons/11.gif" class="p"> <span id="l41" class="unselected">塔苏斯至圣经院</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/托钵传教士.htm" onclick="return LinkClick('42',false,true)" target="content" title="托钵传教士" onmousemove="window.status='托钵传教士'"><img src="icons/11.gif" class="p"> <span id="l42" class="unselected">托钵传教士</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/救赎教派布焰使.htm" onclick="return LinkClick('43',false,true)" target="content" title="救赎教派布焰使" onmousemove="window.status='救赎教派布焰使'"><img src="icons/11.gif" class="p"> <span id="l43" class="unselected">救赎教派布焰使</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('44')"><img id="imgn44" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/卫队士兵.htm" onclick="return LinkClick('44',true,true)" onDblClick="return LinkDblClick('44')" target="content" title="卫队士兵" onmousemove="window.status='卫队士兵'"><img id="img44" src="icons/1.gif" class="p"> <span id="l44" class="unselected">卫队士兵</span></a></nobr></div>
+<div id="d44" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/玛拉登陆点大屠杀.htm" onclick="return LinkClick('45',false,true)" target="content" title="玛拉登陆点大屠杀" onmousemove="window.status='玛拉登陆点大屠杀'"><img src="icons/11.gif" class="p"> <span id="l45" class="unselected">玛拉登陆点大屠杀</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/边际远征军.htm" onclick="return LinkClick('46',false,true)" target="content" title="边际远征军" onmousemove="window.status='边际远征军'"><img src="icons/11.gif" class="p"> <span id="l46" class="unselected">边际远征军</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/特伦奇战争老兵.htm" onclick="return LinkClick('47',false,true)" target="content" title="特伦奇战争老兵" onmousemove="window.status='特伦奇战争老兵'"><img src="icons/11.gif" class="p"> <span id="l47" class="unselected">特伦奇战争老兵</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('48')"><img id="imgn48" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/灵能者.htm" onclick="return LinkClick('48',true,true)" onDblClick="return LinkDblClick('48')" target="content" title="灵能者" onmousemove="window.status='灵能者'"><img id="img48" src="icons/1.gif" class="p"> <span id="l48" class="unselected">灵能者</span></a></nobr></div>
+<div id="d48" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/魂覆暗影.htm" onclick="return LinkClick('49',false,true)" target="content" title="魂覆暗影" onmousemove="window.status='魂覆暗影'"><img src="icons/11.gif" class="p"> <span id="l49" class="unselected">魂覆暗影</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/神皇之光指引.htm" onclick="return LinkClick('50',false,true)" target="content" title="神皇之光指引" onmousemove="window.status='神皇之光指引'"><img src="icons/11.gif" class="p"> <span id="l50" class="unselected">神皇之光指引</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/活梦魇.htm" onclick="return LinkClick('51',false,true)" target="content" title="活梦魇" onmousemove="window.status='活梦魇'"><img src="icons/11.gif" class="p"> <span id="l51" class="unselected">活梦魇</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('52')"><img id="imgn52" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/审判官手册/流氓.htm" onclick="return LinkClick('52',true,true)" onDblClick="return LinkDblClick('52')" target="content" title="流氓" onmousemove="window.status='流氓'"><img id="img52" src="icons/1.gif" class="p"> <span id="l52" class="unselected">流氓</span></a></nobr></div>
+<div id="d52" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/野兽屋奴商.htm" onclick="return LinkClick('53',false,true)" target="content" title="野兽屋奴商" onmousemove="window.status='野兽屋奴商'"><img src="icons/11.gif" class="p"> <span id="l53" class="unselected">野兽屋奴商</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/冷行会情报员.htm" onclick="return LinkClick('54',false,true)" target="content" title="冷行会情报员" onmousemove="window.status='冷行会情报员'"><img src="icons/11.gif" class="p"> <span id="l54" class="unselected">冷行会情报员</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/托罗斯联盟.htm" onclick="return LinkClick('55',false,true)" target="content" title="托罗斯联盟" onmousemove="window.status='托罗斯联盟'"><img src="icons/11.gif" class="p"> <span id="l55" class="unselected">托罗斯联盟</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('56')"><img id="imgn56" src="icons/uaplus.gif" class="p"></a><a href="topics/背景包/审判官手册/技术神甫.htm" onclick="return LinkClick('56',true,true)" onDblClick="return LinkDblClick('56')" target="content" title="技术神甫" onmousemove="window.status='技术神甫'"><img id="img56" src="icons/1.gif" class="p"> <span id="l56" class="unselected">技术神甫</span></a></nobr></div>
+<div id="d56" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/图勒门徒.htm" onclick="return LinkClick('57',false,true)" target="content" title="图勒门徒" onmousemove="window.status='图勒门徒'"><img src="icons/11.gif" class="p"> <span id="l57" class="unselected">图勒门徒</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/审判官手册/索雷克斯圣光教.htm" onclick="return LinkClick('58',false,true)" target="content" title="索雷克斯圣光教" onmousemove="window.status='索雷克斯圣光教'"><img src="icons/11.gif" class="p"> <span id="l58" class="unselected">索雷克斯圣光教</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/审判官手册/玛琉格利斯技术异端.htm" onclick="return LinkClick('59',false,true)" target="content" title="玛琉格利斯技术异端" onmousemove="window.status='玛琉格利斯技术异端'"><img src="icons/11.gif" class="p"> <span id="l59" class="unselected">玛琉格利斯技术异端</span></a></nobr></div>
+</div></div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('60')"><img id="imgn60" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/激进派手册/激进派手册.htm" onclick="return LinkClick('60',true,true)" onDblClick="return LinkDblClick('60')" target="content" title="激进派手册" onmousemove="window.status='激进派手册'"><img id="img60" src="icons/1.gif" class="p"> <span id="l60" class="unselected">激进派手册</span></a></nobr></div>
+<div id="d60" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/戴罪之身.htm" onclick="return LinkClick('61',false,true)" target="content" title="戴罪之身" onmousemove="window.status='戴罪之身'"><img src="icons/11.gif" class="p"> <span id="l61" class="unselected">戴罪之身</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/异端教派.htm" onclick="return LinkClick('62',false,true)" target="content" title="异端教派" onmousemove="window.status='异端教派'"><img src="icons/11.gif" class="p"> <span id="l62" class="unselected">异端教派</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/正义，而非法律.htm" onclick="return LinkClick('63',false,true)" target="content" title="正义，而非法律" onmousemove="window.status='正义，而非法律'"><img src="icons/11.gif" class="p"> <span id="l63" class="unselected">正义，而非法律</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/赎罪者.htm" onclick="return LinkClick('64',false,true)" target="content" title="赎罪者" onmousemove="window.status='赎罪者'"><img src="icons/11.gif" class="p"> <span id="l64" class="unselected">赎罪者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/持尔真名.htm" onclick="return LinkClick('65',false,true)" target="content" title="持尔真名" onmousemove="window.status='持尔真名'"><img src="icons/11.gif" class="p"> <span id="l65" class="unselected">持尔真名</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/不可接触者.htm" onclick="return LinkClick('66',false,true)" target="content" title="不可接触者" onmousemove="window.status='不可接触者'"><img src="icons/11.gif" class="p"> <span id="l66" class="unselected">不可接触者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/激进派手册/亚空间侵染.htm" onclick="return LinkClick('67',false,true)" target="content" title="亚空间侵染" onmousemove="window.status='亚空间侵染'"><img src="icons/11.gif" class="p"> <span id="l67" class="unselected">亚空间侵染</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/激进派手册/命线缠绕.htm" onclick="return LinkClick('68',false,true)" target="content" title="命线缠绕" onmousemove="window.status='命线缠绕'"><img src="icons/11.gif" class="p"> <span id="l68" class="unselected">命线缠绕</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('69')"><img id="imgn69" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/忠烈之血/忠烈之血.htm" onclick="return LinkClick('69',true,true)" onDblClick="return LinkDblClick('69')" target="content" title="忠烈之血" onmousemove="window.status='忠烈之血'"><img id="img69" src="icons/1.gif" class="p"> <span id="l69" class="unselected">忠烈之血</span></a></nobr></div>
+<div id="d69" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/忠烈之血/蒙福降生.htm" onclick="return LinkClick('70',false,true)" target="content" title="蒙福降生" onmousemove="window.status='蒙福降生'"><img src="icons/11.gif" class="p"> <span id="l70" class="unselected">蒙福降生</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/忠烈之血/皈依者.htm" onclick="return LinkClick('71',false,true)" target="content" title="皈依者" onmousemove="window.status='皈依者'"><img src="icons/11.gif" class="p"> <span id="l71" class="unselected">皈依者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/忠烈之血/朝圣者.htm" onclick="return LinkClick('72',false,true)" target="content" title="朝圣者" onmousemove="window.status='朝圣者'"><img src="icons/11.gif" class="p"> <span id="l72" class="unselected">朝圣者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/忠烈之血/背弃万机神之人.htm" onclick="return LinkClick('73',false,true)" target="content" title="背弃万机神之人" onmousemove="window.status='背弃万机神之人'"><img src="icons/11.gif" class="p"> <span id="l73" class="unselected">背弃万机神之人</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/忠烈之血/得见神迹.htm" onclick="return LinkClick('74',false,true)" target="content" title="得见神迹" onmousemove="window.status='得见神迹'"><img src="icons/11.gif" class="p"> <span id="l74" class="unselected">得见神迹</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('75')"><img id="imgn75" src="icons/tplus.gif" class="p"></a><a href="topics/背景包/恶魔猎手/恶魔猎手.htm" onclick="return LinkClick('75',true,true)" onDblClick="return LinkDblClick('75')" target="content" title="恶魔猎手" onmousemove="window.status='恶魔猎手'"><img id="img75" src="icons/1.gif" class="p"> <span id="l75" class="unselected">恶魔猎手</span></a></nobr></div>
+<div id="d75" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/恶魔猎手/血肉圣化.htm" onclick="return LinkClick('76',false,true)" target="content" title="血肉圣化" onmousemove="window.status='血肉圣化'"><img src="icons/11.gif" class="p"> <span id="l76" class="unselected">血肉圣化</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/恶魔猎手/降魔者.htm" onclick="return LinkClick('77',false,true)" target="content" title="降魔者" onmousemove="window.status='降魔者'"><img src="icons/11.gif" class="p"> <span id="l77" class="unselected">降魔者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/恶魔猎手/宿命噬者.htm" onclick="return LinkClick('78',false,true)" target="content" title="宿命噬者" onmousemove="window.status='宿命噬者'"><img src="icons/11.gif" class="p"> <span id="l78" class="unselected">宿命噬者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/恶魔猎手/宿主备身.htm" onclick="return LinkClick('79',false,true)" target="content" title="宿主备身" onmousemove="window.status='宿主备身'"><img src="icons/11.gif" class="p"> <span id="l79" class="unselected">宿主备身</span></a></nobr></div>
+</div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('80')"><img id="imgn80" src="icons/uaplus.gif" class="p"></a><a href="topics/背景包/裁决之书/裁决之书.htm" onclick="return LinkClick('80',true,true)" onDblClick="return LinkDblClick('80')" target="content" title="裁决之书" onmousemove="window.status='裁决之书'"><img id="img80" src="icons/1.gif" class="p"> <span id="l80" class="unselected">裁决之书</span></a></nobr></div>
+<div id="d80" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/冷贸易商.htm" onclick="return LinkClick('81',false,true)" target="content" title="冷贸易商" onmousemove="window.status='冷贸易商'"><img src="icons/11.gif" class="p"> <span id="l81" class="unselected">冷贸易商</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/执法者.htm" onclick="return LinkClick('82',false,true)" target="content" title="执法者" onmousemove="window.status='执法者'"><img src="icons/11.gif" class="p"> <span id="l82" class="unselected">执法者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/巢都马仔.htm" onclick="return LinkClick('83',false,true)" target="content" title="巢都马仔" onmousemove="window.status='巢都马仔'"><img src="icons/11.gif" class="p"> <span id="l83" class="unselected">巢都马仔</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/冒充者.htm" onclick="return LinkClick('84',false,true)" target="content" title="冒充者" onmousemove="window.status='冒充者'"><img src="icons/11.gif" class="p"> <span id="l84" class="unselected">冒充者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/卡斯巴利卡“贵族”.htm" onclick="return LinkClick('85',false,true)" target="content" title="卡斯巴利卡“贵族”" onmousemove="window.status='卡斯巴利卡“贵族”'"><img src="icons/11.gif" class="p"> <span id="l85" class="unselected">卡斯巴利卡“贵族”</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/无罪证明.htm" onclick="return LinkClick('86',false,true)" target="content" title="无罪证明" onmousemove="window.status='无罪证明'"><img src="icons/11.gif" class="p"> <span id="l86" class="unselected">无罪证明</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/背景包/裁决之书/西贝柳斯拾荒者.htm" onclick="return LinkClick('87',false,true)" target="content" title="西贝柳斯拾荒者" onmousemove="window.status='西贝柳斯拾荒者'"><img src="icons/11.gif" class="p"> <span id="l87" class="unselected">西贝柳斯拾荒者</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/背景包/裁决之书/底巢商人.htm" onclick="return LinkClick('88',false,true)" target="content" title="底巢商人" onmousemove="window.status='底巢商人'"><img src="icons/11.gif" class="p"> <span id="l88" class="unselected">底巢商人</span></a></nobr></div>
+</div></div><div><nobr><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/精英进阶/精英进阶.htm" onclick="return LinkClick('89',false,true)" target="content" title="精英进阶" onmousemove="window.status='精英进阶'"><img src="icons/1.gif" class="p"> <span id="l89" class="unselected">精英进阶</span></a></nobr></div>
+</div><div><nobr><a href="#" onClick="return NodeClick('90')"><img id="imgn90" src="icons/tplus.gif" class="p"></a><a href="topics/巫术/巫术.htm" onclick="return LinkClick('90',true,true)" onDblClick="return LinkDblClick('90')" target="content" title="巫术" onmousemove="window.status='巫术'"><img id="img90" src="icons/1.gif" class="p"> <span id="l90" class="unselected">巫术</span></a></nobr></div>
+<div id="d90" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/巫术/黑暗诸神的门徒.htm" onclick="return LinkClick('91',false,true)" target="content" title="黑暗诸神的门徒" onmousemove="window.status='黑暗诸神的门徒'"><img src="icons/11.gif" class="p"> <span id="l91" class="unselected">黑暗诸神的门徒</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/巫术/激进派手册.htm" onclick="return LinkClick('92',false,true)" target="content" title="激进派手册" onmousemove="window.status='激进派手册'"><img src="icons/11.gif" class="p"> <span id="l92" class="unselected">激进派手册</span></a></nobr></div>
+</div><div><nobr><a href="#" onClick="return NodeClick('93')"><img id="imgn93" src="icons/tplus.gif" class="p"></a><a href="topics/神术/神术.htm" onclick="return LinkClick('93',true,true)" onDblClick="return LinkDblClick('93')" target="content" title="神术" onmousemove="window.status='神术'"><img id="img93" src="icons/1.gif" class="p"> <span id="l93" class="unselected">神术</span></a></nobr></div>
+<div id="d93" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/$$unsavedpage1.htm" onclick="return LinkClick('94',false,true)" target="content" title="审判官手册中的神术" onmousemove="window.status='审判官手册中的神术'"><img src="icons/11.gif" class="p"> <span id="l94" class="unselected">审判官手册中的神术</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/$$unsavedpage2.htm" onclick="return LinkClick('95',false,true)" target="content" title="忠烈之血中的神术" onmousemove="window.status='忠烈之血中的神术'"><img src="icons/11.gif" class="p"> <span id="l95" class="unselected">忠烈之血中的神术</span></a></nobr></div>
+</div><div><nobr><a href="#" onClick="return NodeClick('96')"><img id="imgn96" src="icons/tplus.gif" class="p"></a><a href="topics/DH01核心规则/DH01_核心规则.htm" onclick="return LinkClick('96',true,true)" onDblClick="return LinkDblClick('96')" target="content" title="DH01 核心规则" onmousemove="window.status='DH01 核心规则'"><img id="img96" src="icons/1.gif" class="p"> <span id="l96" class="unselected">DH01 核心规则</span></a></nobr></div>
+<div id="d96" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/DH01核心规则/概览.htm" onclick="return LinkClick('97',false,true)" target="content" title="概览" onmousemove="window.status='概览'"><img src="icons/11.gif" class="p"> <span id="l97" class="unselected">概览</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><a href="#" onClick="return NodeClick('98')"><img id="imgn98" src="icons/uaplus.gif" class="p"></a><a href="topics/DH01核心规则/第一章：创建角色.htm" onclick="return LinkClick('98',true,true)" onDblClick="return LinkDblClick('98')" target="content" title="第一章：创建角色" onmousemove="window.status='第一章：创建角色'"><img id="img98" src="icons/1.gif" class="p"> <span id="l98" class="unselected">第一章：创建角色</span></a></nobr></div>
+<div id="d98" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/DH01核心规则/创建你的侍僧.htm" onclick="return LinkClick('99',false,true)" target="content" title="创建你的侍僧" onmousemove="window.status='创建你的侍僧'"><img src="icons/11.gif" class="p"> <span id="l99" class="unselected">创建你的侍僧</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/DH01核心规则/让你的角色活起来.htm" onclick="return LinkClick('100',false,true)" target="content" title="让你的角色活起来" onmousemove="window.status='让你的角色活起来'"><img src="icons/11.gif" class="p"> <span id="l100" class="unselected">让你的角色活起来</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/blank.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/DH01核心规则/角色创建补充包（节选）.htm" onclick="return LinkClick('101',false,true)" target="content" title="角色创建补充包（节选）" onmousemove="window.status='角色创建补充包（节选）'"><img src="icons/11.gif" class="p"> <span id="l101" class="unselected">角色创建补充包（节选）</span></a></nobr></div>
+</div></div><div><nobr><a href="#" onClick="return NodeClick('102')"><img id="imgn102" src="icons/tplus.gif" class="p"></a><a href="topics/DH02GM工具包/DH02_GM工具包.htm" onclick="return LinkClick('102',true,true)" onDblClick="return LinkDblClick('102')" target="content" title="DH02 GM工具包" onmousemove="window.status='DH02 GM工具包'"><img id="img102" src="icons/1.gif" class="p"> <span id="l102" class="unselected">DH02 GM工具包</span></a></nobr></div>
+<div id="d102" style="display:none"><div><nobr><img src="icons/line.gif" class="p"><img src="icons/tshaped.gif" class="p"><a href="topics/DH02GM工具包/第一章_肉中群蛆.htm" onclick="return LinkClick('103',false,true)" target="content" title="第一章 肉中群蛆" onmousemove="window.status='第一章 肉中群蛆'"><img src="icons/11.gif" class="p"> <span id="l103" class="unselected">第一章 肉中群蛆</span></a></nobr></div>
+<div><nobr><img src="icons/line.gif" class="p"><img src="icons/upangle.gif" class="p"><a href="topics/DH02GM工具包/第二章_附录.htm" onclick="return LinkClick('104',false,true)" target="content" title="第二章 附录" onmousemove="window.status='第二章 附录'"><img src="icons/11.gif" class="p"> <span id="l104" class="unselected">第二章 附录</span></a></nobr></div>
+</div><div><nobr><img src="icons/tshaped.gif" class="p"><a href="topics/DH03净化不洁/DH03_净化不洁.htm" onclick="return LinkClick('105',false,true)" target="content" title="DH03 净化不洁" onmousemove="window.status='DH03 净化不洁'"><img src="icons/11.gif" class="p"> <span id="l105" class="unselected">DH03 净化不洁</span></a></nobr></div>
+<div><nobr><img src="icons/tshaped.gif" class="p"><a href="topics/DH04审判官手册/DH04_审判官手册.htm" onclick="return LinkClick('106',false,true)" target="content" title="DH04 审判官手册" onmousemove="window.status='DH04 审判官手册'"><img src="icons/11.gif" class="p"> <span id="l106" class="unselected">DH04 审判官手册</span></a></nobr></div>
+<div><nobr><img src="icons/tshaped.gif" class="p"><a href="topics/DH05黑暗诸神之门徒/DH05_黑暗诸神之门徒.htm" onclick="return LinkClick('107',false,true)" target="content" title="DH05 黑暗诸神之门徒" onmousemove="window.status='DH05 黑暗诸神之门徒'"><img src="icons/11.gif" class="p"> <span id="l107" class="unselected">DH05 黑暗诸神之门徒</span></a></nobr></div>
+<div><nobr><img src="icons/tshaped.gif" class="p"><a href="topics/DH06咒逐罪物/DH06_咒逐罪物.htm" onclick="return LinkClick('108',false,true)" target="content" title="DH06 咒逐罪物" onmousemove="window.status='DH06 咒逐罪物'"><img src="icons/11.gif" class="p"> <span id="l108" class="unselected">DH06 咒逐罪物</span></a></nobr></div>
+<div><nobr><img src="icons/upangle.gif" class="p"><a href="topics/更新日志.htm" onclick="return LinkClick('109',false,true)" target="content" title="更新日志" onmousemove="window.status='更新日志'"><img src="icons/11.gif" class="p"> <span id="l109" class="unselected">更新日志</span></a></nobr></div>
+<script>divlist = [1,2,4,6,10,14,17,20,23,26,27,28,32,36,40,44,48,52,56,60,69,75,80,90,93,96,98,102]</script>
+</body>
+</html>
