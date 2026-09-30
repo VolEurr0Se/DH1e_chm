@@ -90,6 +90,14 @@ jobs:
           test -f "content/${WCP_FILE}"
           test -f "templates/index.htm"
 
+      # 去掉 WinCHM 的“模板页”目录条目（如 Fixed Top），只影响网页版，不修改原工程文件
+      - name: Strip template topics from WCP
+        run: |
+          set -euo pipefail
+          python content/.github/scripts/strip_template_topics.py \
+            "content/${WCP_FILE}" \
+            "content/.web-build.wcp"
+
       # 不配置 search_template / search_api_base：
       # 使用模板自带的前端搜索（webhelpsearch.htm + data.js），无需搜索服务器。
       - name: Generate wcp2web config
@@ -98,7 +106,7 @@ jobs:
           mkdir -p build-config output
           cat > build-config/wcp2web.toml <<TOML
           [project]
-          wcp = "../content/${WCP_FILE}"
+          wcp = "../content/.web-build.wcp"
           source_root = "../content"
           template_root = "../templates"
           title = "${SITE_TITLE}"
