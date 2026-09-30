@@ -1,0 +1,161 @@
+# 黑暗异端 1E 不全书：编译网页版并发布到 GitHub Pages
+#
+# 触发方式：
+#   1. 在 GitHub 上发布（Publish）一个 Release 时自动运行；
+#   2. 在 Actions 页面手动点击 "Run workflow"（使用 main 分支最新内容）。
+#
+# 编译器 wcp2web 与网页模板均来自 DND5eChm 项目（MIT 协议），见 NOTICE.md。
+
+name: Build and Publish Web
+
+on:
+  release:
+    types:
+      - published
+  workflow_dispatch:
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  PYTHON_VERSION: "3.12"
+
+  # 工程文件（相对仓库根目录）
+  WCP_FILE: "黑暗异端_1E_不全书.wcp"
+  SITE_TITLE: "黑暗异端 1E 不全书"
+
+  # 网页模板：你 fork 的仓库。想换回上游可改成 DND5eChm/5echm_web_templates
+  TEMPLATE_REPOSITORY: "VolEurr0Se/chm_web_templates"
+  TEMPLATE_REF: "main"
+
+  # 编译器
+  COMPILER_REPOSITORY: "DND5eChm/5echm_web_build"
+  COMPILER_REF: "main"
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout content
+        uses: actions/checkout@v6
+        with:
+          # Release 触发时编译该 Release 对应的提交；手动触发时编译 main
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.sha }}
+          path: content
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Checkout web compiler
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.COMPILER_REPOSITORY }}
+          ref: ${{ env.COMPILER_REF }}
+          path: compiler
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Checkout web templates
+        uses: actions/checkout@v6
+        with:
+          repository: ${{ env.TEMPLATE_REPOSITORY }}
+          ref: ${{ env.TEMPLATE_REF }}
+          path: templates
+          fetch-depth: 1
+          persist-credentials: false
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install web compiler
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install ./compiler
+          wcp2web --help >/dev/null
+
+      - name: Verify build inputs
+        run: |
+          set -euo pipefail
+          test -f "content/${WCP_FILE}"
+          test -f "templates/index.htm"
+
+      # 不配置 search_template / search_api_base：
+      # 使用模板自带的前端搜索（webhelpsearch.htm + data.js），无需搜索服务器。
+      - name: Generate wcp2web config
+        run: |
+          set -euo pipefail
+          mkdir -p build-config output
+          cat > build-config/wcp2web.toml <<TOML
+          [project]
+          wcp = "../content/${WCP_FILE}"
+          source_root = "../content"
+          template_root = "../templates"
+          title = "${SITE_TITLE}"
+
+          [output]
+          site_dir = "../output/site"
+          search_data = "../output/search/data.js"
+          report_dir = "../output/reports"
+
+          [webhelp]
+          default_page = ""
+          nav_width = 285
+          back_color = "#ffffff"
+
+          [encoding]
+          default_fallback = "gb18030"
+          strict = false
+
+          [build]
+          jobs = 4
+          incremental = false
+          clean = true
+          TOML
+          cat build-config/wcp2web.toml
+
+      - name: Build web site
+        run: |
+          set -euo pipefail
+          wcp2web build --config build-config/wcp2web.toml
+          # 模板仓库的说明文件不需要发布
+          rm -f output/site/AGENTS.md output/site/README.md
+          test -s output/site/index.html
+          test -s output/site/data.js
+          du -sh output/site
+
+      - name: Upload build reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wcp2web-reports-${{ github.run_number }}
+          path: output/reports/
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output/site
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
